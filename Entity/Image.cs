@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entity
+namespace ENTITY
 {
     public class Image
     {
         [Key]
-        public long ImageId { get; set; }
+        public string ImageId { get; set; } = string.Empty;
         public string ImageName { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
-        public long ProductId { get; set; } 
+        public string ProductId { get; set; } = string.Empty;
     }
 }

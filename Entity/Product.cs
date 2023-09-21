@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Entity
+namespace ENTITY;
+public class Product
 {
-    public class Product
-    {
-        [Key]
-        public long ProductId { get; set; }
-        public string ProductName { get; set; } = string.Empty;
-        public string ProductDescription { get; set; } = string.Empty;
-        public string ProductCategory { get; set; } = string.Empty;
-        public string ProductType { get; set; } = string.Empty;
-        public ICollection<Image> ProductImage { get; set; }
-    }
+    [Key]
+    public string ProductId { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
+    public string ProductInfo { get; set; } = string.Empty;
+    public ICollection<Image> ProductImage { get; set; } = new List<Image>();
+    public string CategoryId { get; set; } = string.Empty;
+    public string BrandId { get; set; } = string.Empty;
 }
