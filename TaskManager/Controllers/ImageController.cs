@@ -87,9 +87,7 @@ namespace TaskManager.Controllers
                 {
                     return Problem(ex.Message);
                 }
-
-                //return CreatedAtAction(nameof(GetImageByImageId), image);
-                return Ok();
+                return NoContent();
             }
 
             return BadRequest();
