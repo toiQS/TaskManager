@@ -78,7 +78,7 @@ namespace TaskManager.Controllers
                     ImageUrl = newimage.ImageUrl,
                     ProductId = newimage.ProductId,
                 };
-                
+
                 try
                 {
                     _context.Images.Add(image);
@@ -111,7 +111,7 @@ namespace TaskManager.Controllers
                     image.ImageUrl = newimage.ImageUrl;
                     image.ProductId = newimage.ProductId;
                     image.ImageName = newimage.ImageName;
-                   
+
                     try
                     {
                         _context.Images.Update(image);
@@ -145,7 +145,7 @@ namespace TaskManager.Controllers
                     .FirstOrDefaultAsync();
                 if (image != null)
                 {
-                    
+
                     try
                     {
                         _context.Images.Remove(image);

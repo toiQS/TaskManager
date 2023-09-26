@@ -12,5 +12,5 @@ public class Supplier
     [Phone]
     public string SupplierPhone { get; set; } = string.Empty;
     public string TaxID { get; set; } = string.Empty;
-    public ICollection<ImportBill> BillList {get; set;} = new List<ImportBill>();
+    public ICollection<ImportBill> BillList { get; set; } = new List<ImportBill>();
 }
