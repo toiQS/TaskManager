@@ -68,8 +68,9 @@ namespace TaskManager.Controllers
                     TaxID = newsupplier.TaxID,
                     BillList = new List<ImportBill>()
                 };
-                _context.Suppliers.Add(supplier);
+                
                 try{
+                    _context.Suppliers.Add(supplier);
                     await _context.SaveChangesAsync();
                 }
                 catch(Exception ex){

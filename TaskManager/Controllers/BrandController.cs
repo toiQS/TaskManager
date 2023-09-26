@@ -62,8 +62,9 @@ namespace TaskManager.Controllers
                         BrandInfo = newbrand.BrandInfo,
                         Products = new List<Product>()
                     };
-                    _context.Brands.Add(brand);
+                    
                     try{
+                        _context.Brands.Add(brand);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
@@ -86,8 +87,9 @@ namespace TaskManager.Controllers
                     currentbrand.BrandId = newbrand.BrandId;
                     currentbrand.BrandName = newbrand.BrandName;
                     currentbrand.BrandInfo = newbrand.BrandInfo;
-                    _context.Brands.Update(currentbrand);
+                    
                     try{
+                        _context.Brands.Update(currentbrand);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
@@ -107,8 +109,9 @@ namespace TaskManager.Controllers
                 }
                 var deletebrand = await _context.Brands.Where(b => b.BrandId == brandId).Include(b => b.Products).FirstOrDefaultAsync();
                 if(deletebrand != null){
-                    _context.Brands.Remove(deletebrand);
+                    
                     try{
+                        _context.Brands.Remove(deletebrand);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){

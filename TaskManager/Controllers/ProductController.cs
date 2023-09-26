@@ -70,8 +70,9 @@ namespace TaskManager.Controllers
                         CategoryId = newproduct.CategoryId,
                         ProductImage = new List<Image>(),
                     };
-                    _context.Products.Add(product);
+                    
                     try{
+                        _context.Products.Add(product);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
@@ -98,8 +99,9 @@ namespace TaskManager.Controllers
                     currentproduct.ProductInfo = newproduct.ProductInfo;
                     currentproduct.BrandId = newproduct.BrandId;
                     currentproduct.CategoryId = newproduct.CategoryId;
-                    _context.Products.Update(currentproduct);
+                    
                     try{
+                        _context.Products.Update(currentproduct);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
@@ -120,8 +122,9 @@ namespace TaskManager.Controllers
                 }
                 var deleteproduct = await _context.Products.Where(p => p.ProductId == productId).Include(i => i.ProductImage).FirstOrDefaultAsync();
                 if(deleteproduct != null){
-                    _context.Products.Remove(deleteproduct);
+                    
                     try{
+                        _context.Products.Remove(deleteproduct);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
@@ -132,6 +135,10 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
             return BadRequest();
+        }
+        public async Task<bool> CheckProductExistAsync(string productId){
+            var result = await _context.Products.AnyAsync(p => p.ProductId == productId);
+            return result;
         }
     }
 }

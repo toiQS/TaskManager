@@ -7,6 +7,7 @@ using Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using ENTITY;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace MyApp.Namespace
 {
@@ -73,6 +74,52 @@ namespace MyApp.Namespace
                     return Problem(ex.Message);
                 }
                 return CreatedAtAction(nameof(GetImportBillById), new {importBillId = newimportBill.ImportBillId}, newimportBill);
+            }
+            return BadRequest();
+        }
+        [HttpPut("{importBillId}")]
+        public async Task<ActionResult<ImportBillResponse>> UpdateImportBill(string importBillId, ImportBillResponse newimportBill){
+            if(!string.IsNullOrEmpty(importBillId)&& ModelState.IsValid){
+                if(_context.ImportBills == null){
+                    return BadRequest();
+                }
+                var item = await _context.ImportBills.Where(i => i.ImportBillId == importBillId).Include(i => i.ListProduct).FirstOrDefaultAsync();
+                if(item != null){
+                    item.SupplierId = newimportBill.SupplierId;
+                    item.ImportBillId = newimportBill.ImportBillId;
+                    item.WarehouseId = newimportBill.WarehouseId;
+                    item.CreateAt = DateTime.Now;
+                    try{
+                        _context.ImportBills.Update(item);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch(Exception ex){
+                        return Problem(ex.Message);
+                    }
+                    return NoContent();
+                }
+                return NotFound();
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpDelete("{importBillId}")]
+        public async Task<ActionResult<ImportBillResponse>> DeleteImportBill(string importBillId){
+            if(!string.IsNullOrEmpty(importBillId)){
+                if(_context.ImportBills == null){
+                    return Problem();
+                }
+                var deleteitem = await _context.ImportBills.Where(i => i.ImportBillId == importBillId).Include(i => i.ListProduct).FirstOrDefaultAsync();
+                if(deleteitem != null){
+                    try{
+                        _context.ImportBills.Remove(deleteitem);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch(Exception ex){
+                        return Problem(ex.Message);
+                    }
+                    return NoContent();
+                }
+                return NotFound();
             }
             return BadRequest();
         }

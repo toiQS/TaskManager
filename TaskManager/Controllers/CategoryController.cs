@@ -64,8 +64,9 @@ namespace TaskManager.Controllers
                     CategoryInfo = newcategory.CategoryInfo,
                     Products = new List<Product>()  
                 };
-                _context.Categories.Add(category);
+                
                 try{
+                    _context.Categories.Add(category);
                     await _context.SaveChangesAsync();
                 }
                 catch(Exception ex){
@@ -86,8 +87,9 @@ namespace TaskManager.Controllers
                     currentcategory.CategoryInfo = newcategory.CategoryInfo;
                     currentcategory.CategoryName = newcategory.CategoryName;
                     currentcategory.CategoryId = newcategory.CategoryId;
-                    _context.Categories.Update(currentcategory);
+                    
                     try{
+                        _context.Categories.Update(currentcategory);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
@@ -107,8 +109,9 @@ namespace TaskManager.Controllers
                 }
                 var deletecategory = await _context.Categories.Where(c => c.CategoryId == categoryId).Include(c => c.Products).FirstOrDefaultAsync();
                 if(deletecategory != null){
-                    _context.Categories.Remove(deletecategory);
+                    
                     try{
+                        _context.Categories.Remove(deletecategory);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){

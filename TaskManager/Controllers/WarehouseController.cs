@@ -64,8 +64,9 @@ namespace TaskManager.Controllers
                     WarehouseName = newwarehouse.WarehouseName,
                     WarehouseAddress = newwarehouse.WarehouseAddress
                 };
-                _context.Warehouse.Add(warehouse);
+                
                 try{
+                    _context.Warehouse.Add(warehouse);
                     await _context.SaveChangesAsync();
                 }
                 catch(Exception ex){
@@ -86,9 +87,10 @@ namespace TaskManager.Controllers
                     currentwarehouse.WarehouseName = newwarehouse.WarehouseName;
                     currentwarehouse.WarehouseAddress = newwarehouse.WarehouseAddress;
                     currentwarehouse.WarehouseId = newwarehouse.WarehouseId;
-                    _context.Warehouse.Update(currentwarehouse);
+                    
                     try{
                         _context.Warehouse.Update(currentwarehouse);
+                        await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){
                         return Problem(ex.Message);
@@ -107,8 +109,9 @@ namespace TaskManager.Controllers
                 }
                 var deletewarehouse = await _context.Warehouse.Where(w => w.WarehouseId == warehouseId).Include(w => w.WarehouseItems).Include(w => w.ImportBillItems).FirstOrDefaultAsync();
                 if(deletewarehouse != null){
-                    _context.Warehouse.Remove(deletewarehouse);
+                   
                     try{
+                        _context.Warehouse.Remove(deletewarehouse);
                         await _context.SaveChangesAsync();
                     }
                     catch(Exception ex){

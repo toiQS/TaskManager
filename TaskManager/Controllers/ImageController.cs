@@ -78,9 +78,10 @@ namespace TaskManager.Controllers
                     ImageUrl = newimage.ImageUrl,
                     ProductId = newimage.ProductId,
                 };
-                _context.Images.Add(image);
+                
                 try
                 {
+                    _context.Images.Add(image);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
@@ -110,9 +111,10 @@ namespace TaskManager.Controllers
                     image.ImageUrl = newimage.ImageUrl;
                     image.ProductId = newimage.ProductId;
                     image.ImageName = newimage.ImageName;
-                    _context.Images.Update(image);
+                   
                     try
                     {
+                        _context.Images.Update(image);
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
@@ -143,9 +145,10 @@ namespace TaskManager.Controllers
                     .FirstOrDefaultAsync();
                 if (image != null)
                 {
-                    _context.Images.Remove(image);
+                    
                     try
                     {
+                        _context.Images.Remove(image);
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
