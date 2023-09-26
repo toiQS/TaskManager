@@ -2,6 +2,7 @@
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using TaskManager.Models.ModelRequest.ProductModel;
 using TaskManager.Models.ModelResponse;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -68,30 +69,27 @@ namespace TaskManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_context.Products != null)
+                if(_context.Products == null)
+                    return Problem();
+                var product = new Product
                 {
-                    var product = new Product
-                    {
-                        ProductId = newproduct.ProductId,
-                        ProductName = newproduct.ProductName,
-                        ProductInfo = newproduct.ProductInfo,
-                        BrandId = newproduct.BrandId,
-                        CategoryId = newproduct.CategoryId,
-                        ProductImage = new List<Image>(),
-                    };
-
-                    try
-                    {
-                        _context.Products.Add(product);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        return Problem(ex.Message);
-                    }
-                    return CreatedAtAction(nameof(GetProductByIdAsync), new { productId = newproduct.ProductId }, newproduct);
+                    ProductId = newproduct.ProductId,
+                    ProductImage = new List<Image>(),
+                    BrandId = newproduct.BrandId,
+                    ProductName = newproduct.ProductName,
+                    CategoryId = newproduct.CategoryId,
+                    ProductInfo = newproduct.ProductInfo
+                };
+                try
+                {
+                    _context.Products.Add(product);
+                    await _context.SaveChangesAsync();
                 }
-                return Problem();
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+                return CreatedAtAction(nameof(GetProductByIdAsync),new {productId = newproduct.ProductId},product);
             }
             return BadRequest(ModelState);
         }
@@ -158,11 +156,6 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
             return BadRequest();
-        }
-        public async Task<bool> CheckProductExistAsync(string productId)
-        {
-            var result = await _context.Products.AnyAsync(p => p.ProductId == productId);
-            return result;
         }
     }
 }
