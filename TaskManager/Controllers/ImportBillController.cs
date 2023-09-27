@@ -24,7 +24,7 @@ namespace MyApp.Namespace
         {
             if (_context.ImportBills == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             var import = await _context.ImportBills.ToListAsync();
             var result = import.Select(i => new ImportBillIndexRequest
@@ -41,7 +41,7 @@ namespace MyApp.Namespace
             {
                 if (_context.ImportBills == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var import = await _context.ImportBills.Where(i => i.ImportBillId == importBillId).Include(i => i.ListProduct).FirstOrDefaultAsync();
                 if (import != null)
@@ -56,9 +56,9 @@ namespace MyApp.Namespace
                     };
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
         public async Task<ActionResult<ImportBillResponse>> CreateImportBill(ImportBillResponse newimportBill)
@@ -67,7 +67,10 @@ namespace MyApp.Namespace
             {
                 if (_context.ImportBills == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                if(CheckImportBillExists(newimportBill.ImportBillId)){
+                    return Problem("dữ liệu đã tồn tại");
                 }
                 var import = new ImportBill
                 {
@@ -83,11 +86,11 @@ namespace MyApp.Namespace
                 }
                 catch (Exception ex)
                 {
-                    return Problem(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return CreatedAtAction(nameof(GetImportBillById), new { importBillId = newimportBill.ImportBillId }, newimportBill);
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{importBillId}")]
         public async Task<ActionResult<ImportBillResponse>> UpdateImportBill(string importBillId, ImportBillResponse newimportBill)
@@ -96,7 +99,7 @@ namespace MyApp.Namespace
             {
                 if (_context.ImportBills == null)
                 {
-                    return BadRequest();
+                    return BadRequest("không thể truy cập dữ liệu");
                 }
                 var item = await _context.ImportBills.Where(i => i.ImportBillId == importBillId).Include(i => i.ListProduct).FirstOrDefaultAsync();
                 if (item != null)
@@ -112,13 +115,13 @@ namespace MyApp.Namespace
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpDelete("{importBillId}")]
         public async Task<ActionResult<ImportBillResponse>> DeleteImportBill(string importBillId)
@@ -127,7 +130,7 @@ namespace MyApp.Namespace
             {
                 if (_context.ImportBills == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var deleteitem = await _context.ImportBills.Where(i => i.ImportBillId == importBillId).Include(i => i.ListProduct).FirstOrDefaultAsync();
                 if (deleteitem != null)
@@ -139,13 +142,16 @@ namespace MyApp.Namespace
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        public bool CheckImportBillExists(string importBillId){
+            return _context.ImportBills.Any(e => e.ImportBillId == importBillId);
         }
     }
 }

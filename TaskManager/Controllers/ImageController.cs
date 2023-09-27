@@ -27,7 +27,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Images == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             if (!string.IsNullOrEmpty(productId))
             {
@@ -41,9 +41,9 @@ namespace TaskManager.Controllers
                     }).ToList();
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
 
         // GET api/<ImageController>/5
@@ -51,7 +51,7 @@ namespace TaskManager.Controllers
         public async Task<ActionResult<ICollection<ImageDetailRequest>>> GetImageByImageId(string imageId)
         {
             if (_context.Images == null)
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             if (!string.IsNullOrEmpty(imageId))
             {
                 var image = await _context.Images.Where(i => i.ImageId == imageId).FirstOrDefaultAsync();
@@ -59,9 +59,9 @@ namespace TaskManager.Controllers
                 {
                     return Ok(image);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
 
         // POST api/<ImageController>
@@ -70,6 +70,12 @@ namespace TaskManager.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(_context.Images == null) {
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                if(CheckImageExits(newimage.ImageId)){
+                    return Problem("dữ liệu đã tồn tại");
+                }
                 // Thêm ảnh vào cơ sở dữ liệu
                 var image = new Image
                 {
@@ -86,12 +92,12 @@ namespace TaskManager.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Problem(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return NoContent();
             }
 
-            return BadRequest();
+            return BadRequest("dữ liệu nhập vào không đúng");
         }
 
 
@@ -101,7 +107,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Images == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             if (ModelState.IsValid && !string.IsNullOrEmpty(imageId))
             {
@@ -119,13 +125,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("Không tìm thấy dữ liệu");
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
 
         }
 
@@ -155,10 +161,14 @@ namespace TaskManager.Controllers
                     {
                         return Problem(ex.Message);
                     }
+                    return NoContent();
                 }
-                return NoContent();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest(string.Empty);
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        public bool CheckImageExits(string imageId){
+            return _context.Images.Any(e => e.ImageId == imageId);
         }
     }
 }
