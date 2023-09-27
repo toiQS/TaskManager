@@ -159,7 +159,7 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
@@ -167,7 +167,7 @@ namespace TaskManager.Controllers
             }
             return BadRequest("dữ liệu đầu vào không đúng");
         }
-        public bool CheckImageExits(string imageId){
+        private bool CheckImageExits(string imageId){
             return _context.Images.Any(e => e.ImageId == imageId);
         }
     }

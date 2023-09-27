@@ -23,7 +23,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Suppliers == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             var supplier = await _context.Suppliers.ToListAsync();
             var result = supplier.Select(s => new SupplierIndexRequest
@@ -40,7 +40,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Suppliers == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var supplier = await _context.Suppliers.Where(s => s.SupplierId == supplierId).Include(s => s.BillList).FirstOrDefaultAsync();
                 if (supplier != null)
@@ -57,9 +57,9 @@ namespace TaskManager.Controllers
                     };
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
         public async Task<ActionResult<SupplierResponse>> CreateSupplierAsync(SupplierResponse newsupplier)
@@ -68,7 +68,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Suppliers == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var supplier = new Supplier
                 {
@@ -87,11 +87,11 @@ namespace TaskManager.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Problem(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return CreatedAtAction(nameof(GetSupplierByIdAsync), new { supplierId = newsupplier.SupplierId }, newsupplier);
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{supplierId}")]
         public async Task<ActionResult<SupplierResponse>> UpdateSupplierAsync(string supplierId, SupplierResponse newsupplier)
@@ -100,7 +100,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Suppliers == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var supplier = await _context.Suppliers.Where(s => s.SupplierId == supplierId).Include(s => s.BillList).FirstOrDefaultAsync();
                 if (supplier != null)
@@ -117,13 +117,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return CreatedAtAction(nameof(GetSupplierByIdAsync), new { supplierId = newsupplier.SupplierId }, newsupplier);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpDelete("{supplierId}")]
         public async Task<IActionResult> DeleteSupplierAsync(string supplierId)
@@ -132,7 +132,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Suppliers == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var deletesupplier = await _context.Suppliers.Where(s => s.SupplierId == supplierId).Include(s => s.BillList).FirstOrDefaultAsync();
                 if (deletesupplier != null)
@@ -144,13 +144,16 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        private bool CheckSupplierExists(string supplierId){
+            return _context.Suppliers.Any(s => s.SupplierId == supplierId);
         }
     }
 }

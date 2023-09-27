@@ -149,7 +149,7 @@ namespace TaskManager.Controllers
             }
             return BadRequest("dữ liệu nhập vào không đúng");
         }
-        public bool CheckBrandExists(string brandId){
+        private bool CheckBrandExists(string brandId){
             return _context.Brands.Any(e => e.BrandId == brandId);
         }
     }

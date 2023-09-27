@@ -150,7 +150,7 @@ namespace TaskManager.Controllers
             }
             return BadRequest("dữ liệu đầu vào không đúng");
         }
-        public bool CheckCategoryExists(string categoryId){
+        private bool CheckCategoryExists(string categoryId){
             return _context.Categories.Any(c => c.CategoryId == categoryId);
         }
     }

@@ -150,7 +150,7 @@ namespace MyApp.Namespace
             }
             return BadRequest("dữ liệu đầu vào không đúng");
         }
-        public bool CheckImportBillExists(string importBillId){
+        private bool CheckImportBillExists(string importBillId){
             return _context.ImportBills.Any(e => e.ImportBillId == importBillId);
         }
     }
