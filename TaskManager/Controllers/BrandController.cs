@@ -23,7 +23,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Brands == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             var brand = await _context.Brands.ToListAsync();
             var result = brand.Select(b => new BrandIndexRequest
@@ -52,11 +52,11 @@ namespace TaskManager.Controllers
                         };
                         return Ok(result);
                     }
-                    return NotFound();
+                    return NotFound("Không tìm thấy thương hiệu");
                 }
-                return Problem();
+                return Problem("Không thể truy câp dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpPost]
         public async Task<IActionResult> CreateBrandAsync(BrandResponse newbrand)
@@ -65,6 +65,8 @@ namespace TaskManager.Controllers
             {
                 if (_context.Brands != null)
                 {
+                    if(CheckBrandExists(newbrand.BrandId))
+                        return Problem("đã tồn tại mã thương hiệu");
                     var brand = new Brand
                     {
                         BrandId = newbrand.BrandId,
@@ -80,13 +82,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                       return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return CreatedAtAction(nameof(GetBrandByIdAsync), new { brandId = newbrand.BrandId }, newbrand);
                 }
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpPut("{brandId}")]
         public async Task<IActionResult> UpdateBrandAsync(string brandId, BrandResponse newbrand)
@@ -95,7 +97,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Brands == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var currentbrand = await _context.Brands.Where(b => b.BrandId == brandId).Include(b => b.Products).FirstOrDefaultAsync();
                 if (currentbrand != null)
@@ -111,13 +113,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpDelete("{brandId}")]
         public async Task<IActionResult> DeleteBrandAsync(string brandId)
@@ -126,7 +128,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Brands == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var deletebrand = await _context.Brands.Where(b => b.BrandId == brandId).Include(b => b.Products).FirstOrDefaultAsync();
                 if (deletebrand != null)
@@ -139,13 +141,16 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu nhập vào không đúng");
+        }
+        private bool CheckBrandExists(string brandId){
+            return _context.Brands.Any(e => e.BrandId == brandId);
         }
     }
 }

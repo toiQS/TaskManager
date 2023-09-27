@@ -26,7 +26,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Products == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             var product = await _context.Products.ToListAsync();
             var result = product.Select(p => new ProductIndexModel
@@ -44,7 +44,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Products == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             if (!string.IsNullOrEmpty(productId))
             {
@@ -60,17 +60,21 @@ namespace TaskManager.Controllers
                     };
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
         public async Task<IActionResult> CreateProductAsync(ProductResponse newproduct)
         {
             if (ModelState.IsValid)
             {
-                if(_context.Products == null)
-                    return Problem();
+                if(_context.Products == null){
+                    return Problem("không truy cập được dữ liệu");
+                } 
+                if(CheckProductExists(newproduct.ProductId)){
+                    return Problem("dữ liệu đã tồn tại");
+                }   
                 var product = new Product
                 {
                     ProductId = newproduct.ProductId,
@@ -87,11 +91,11 @@ namespace TaskManager.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return CreatedAtAction(nameof(GetProductByIdAsync),new {productId = newproduct.ProductId},product);
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu nhập vào không đúng");
         }
 
         // PUT api/<ProductController>/5
@@ -102,7 +106,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Products == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var currentproduct = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
                 if (currentproduct != null)
@@ -120,13 +124,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         // DELETE api/<ProductController>/5
         [HttpDelete("{productId}")]
@@ -149,13 +153,16 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        private bool CheckProductExists(string productId){
+            return _context.Products.Any(e => e.ProductId == productId);
         }
     }
 }

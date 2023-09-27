@@ -40,7 +40,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Warehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var warehouse = await _context.Warehouse.Where(w => w.WarehouseId == warehouseId).Include(w => w.WarehouseItems).Include(w => w.ImportBillItems).FirstOrDefaultAsync();
                 if (warehouse != null)
@@ -55,9 +55,9 @@ namespace TaskManager.Controllers
                     };
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
         public async Task<IActionResult> CreateWarehouseAsync(WarehouseResponse newwarehouse)
@@ -66,7 +66,10 @@ namespace TaskManager.Controllers
             {
                 if (_context.Warehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                if(CheckWarehouseExists(newwarehouse.WarehouseId)){
+                    return Problem("dữ liệu đã tồn tại");
                 }
                 var warehouse = new Warehouse
                 {
@@ -82,11 +85,11 @@ namespace TaskManager.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Problem(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return CreatedAtAction(nameof(GetWarehouseByIdAsync), new { warehouseId = newwarehouse.WarehouseId }, newwarehouse);
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{warehouseId}")]
         public async Task<IActionResult> UpdateWarehouseAsync(string warehouseId, WarehouseResponse newwarehouse)
@@ -95,7 +98,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Warehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var currentwarehouse = await _context.Warehouse.Where(w => w.WarehouseId == warehouseId).Include(w => w.WarehouseItems).Include(w => w.ImportBillItems).FirstOrDefaultAsync();
                 if (currentwarehouse != null)
@@ -111,13 +114,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpDelete("{warehouseId}")]
         public async Task<IActionResult> DeleteWarehouseAsync(string warehouseId)
@@ -126,7 +129,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Warehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var deletewarehouse = await _context.Warehouse.Where(w => w.WarehouseId == warehouseId).Include(w => w.WarehouseItems).Include(w => w.ImportBillItems).FirstOrDefaultAsync();
                 if (deletewarehouse != null)
@@ -139,13 +142,16 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        private bool CheckWarehouseExists(string warehouseId){
+            return _context.Warehouse.Any(w => w.WarehouseId == warehouseId);
         }
     }
 }

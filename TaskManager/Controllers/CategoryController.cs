@@ -24,7 +24,7 @@ namespace TaskManager.Controllers
         {
             if (_context.Categories == null)
             {
-                return Problem();
+                return Problem("không thể truy cập dữ liệu");
             }
             var category = await _context.Categories.ToListAsync();
             var result = category.Select(c => new CategoriesIndexRequest
@@ -41,7 +41,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Categories == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var category = await _context.Categories.Where(c => c.CategoryId == categoryId).Include(c => c.Products).FirstOrDefaultAsync();
                 if (category != null)
@@ -55,9 +55,9 @@ namespace TaskManager.Controllers
                     };
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpPost]
         public async Task<IActionResult> CreateCategoryAsync(CategoriesResponse newcategory)
@@ -66,8 +66,10 @@ namespace TaskManager.Controllers
             {
                 if (_context.Categories == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
+                if(CheckCategoryExists(newcategory.CategoryId))
+                    return Problem("dữ liệu đã tồn tại");
                 var category = new Category
                 {
                     CategoryId = newcategory.CategoryId,
@@ -83,11 +85,11 @@ namespace TaskManager.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Problem(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return CreatedAtAction(nameof(GetCategoryByIdAsync), new { categoryId = newcategory.CategoryId }, newcategory);
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{categoryId}")]
         public async Task<IActionResult> UpdateCategoryAsync(string categoryId, CategoriesResponse newcategory)
@@ -96,7 +98,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Categories == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var currentcategory = await _context.Categories.Where(c => c.CategoryId == categoryId).Include(c => c.Products).FirstOrDefaultAsync();
                 if (currentcategory != null)
@@ -112,13 +114,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpDelete("{categoryId}")]
         public async Task<IActionResult> DeleteCategoryAsync(string categoryId)
@@ -127,7 +129,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.Categories == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var deletecategory = await _context.Categories.Where(c => c.CategoryId == categoryId).Include(c => c.Products).FirstOrDefaultAsync();
                 if (deletecategory != null)
@@ -140,12 +142,16 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return NotFound();
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        private bool CheckCategoryExists(string categoryId){
+            return _context.Categories.Any(c => c.CategoryId == categoryId);
         }
     }
 }

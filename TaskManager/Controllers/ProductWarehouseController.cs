@@ -21,7 +21,7 @@ namespace TaskManager.Controllers
         {
             if (_context.ProductWarehouse == null)
             {
-                return BadRequest();
+                return Problem("không thể truy cập dữ liệu");
             }
             var item = await _context.ProductWarehouse.ToListAsync();
             var result = item.Select(i => new ProductWarehouseIndexRequest
@@ -39,7 +39,10 @@ namespace TaskManager.Controllers
             {
                 if (_context.ProductWarehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                if(CheckItemExits(productWarehouse.ProductWarehouseId)){
+                    return Problem("dữ liệu đã tồn tại");
                 }
                 var item = new ProductWarehouse
                 {
@@ -56,11 +59,11 @@ namespace TaskManager.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Problem(ex.Message);
+                    return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                 }
                 return CreatedAtAction(nameof(GetProductWarehouseByWarehouseId), new { warehouseId = productWarehouse.WarehouseId }, productWarehouse);
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpGet("{productwarehouseId}")]
         public async Task<ActionResult<ProductWarehouseDetailRequest>> GetProductWarehouseById(long productwarehouseId)
@@ -69,7 +72,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.ProductWarehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var item = await _context.ProductWarehouse.Where(i => i.ProductWarehouseId == productwarehouseId).FirstOrDefaultAsync();
                 if (item != null)
@@ -84,9 +87,9 @@ namespace TaskManager.Controllers
                     };
                     return Ok(result);
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{productwarehouseId}")]
         public async Task<IActionResult> UpdateProductWarehouse(long productwarehouseId, ProductWarehouseDetailRequest productWarehouse)
@@ -95,7 +98,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.ProductWarehouse == null)
                 {
-                    return Problem();
+                    return Problem("không thể truy cập dữ liệu");
                 }
                 var item = await _context.ProductWarehouse.Where(i => i.ProductWarehouseId == productwarehouseId).FirstOrDefaultAsync();
                 if (item != null)
@@ -112,13 +115,13 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Problem(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest(ModelState);
+            return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpDelete("{productwarehouseId}")]
         public async Task<IActionResult> DeleteProductWarehouse(long productwarehouseId)
@@ -127,7 +130,7 @@ namespace TaskManager.Controllers
             {
                 if (_context.ProductWarehouse == null)
                 {
-                    return BadRequest();
+                    return BadRequest("không thể truy cập dữ liệu");
                 }
                 var deleteproductwarehouse = await _context.ProductWarehouse.Where(i => i.ProductWarehouseId == productwarehouseId).FirstOrDefaultAsync();
                 if (deleteproductwarehouse != null)
@@ -139,13 +142,16 @@ namespace TaskManager.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return BadRequest(ex.Message);
+                        return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
                     return NoContent();
                 }
-                return NotFound();
+                return NotFound("không tìm thấy dữ liệu");
             }
-            return BadRequest();
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        private bool CheckItemExits(long productwarehouseId){
+            return _context.ProductWarehouse.Any(e => e.ProductWarehouseId == productwarehouseId);
         }
     }
 }
