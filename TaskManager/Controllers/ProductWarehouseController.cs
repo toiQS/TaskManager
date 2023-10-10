@@ -16,21 +16,26 @@ namespace TaskManager.Controllers
             _context = context;
             _logger = logger;
         }
-        [HttpGet("{warehouseId}")]
+        [HttpGet]
         public async Task<ActionResult<ICollection<ProductWarehouseIndexRequest>>> GetProductWarehouseByWarehouseId(string warehouseId)
         {
             if (_context.ProductWarehouse == null)
             {
                 return Problem("không thể truy cập dữ liệu");
             }
-            var item = await _context.ProductWarehouse.ToListAsync();
-            var result = item.Select(i => new ProductWarehouseIndexRequest
+            if (string.IsNullOrEmpty(warehouseId))
             {
-                ProductId = i.ProductId,
-                ProductWarehouseId = i.ProductWarehouseId,
-                UpdateAt = i.UpdateAt
-            }).ToList();
+                return BadRequest("dữ liệu đầu vào không đúng");
+            }
+            var item = await _context.ProductWarehouse.Where(i => i.WarehouseId  == warehouseId).ToListAsync();
+            var result = item.Select(s => new ProductWarehouseIndexRequest
+            {
+                ProductId = s.ProductId,
+                ProductWarehouseId = s.ProductWarehouseId,
+                UpdateAt = s.UpdateAt
+            });
             return Ok(result);
+
         }
         [HttpPost]
         public async Task<IActionResult> AddProductWarehouse(ProductWarehouseDetailRequest productWarehouse)
@@ -83,6 +88,7 @@ namespace TaskManager.Controllers
                         WarehouseId = item.WarehouseId,
                         ProductId = item.ProductId,
                         ImportPriceOfEachProduct = item.ImportPriceOfEachProduct,
+                        Quantity = item.Quantity,
                         UpdateAt = item.UpdateAt
                     };
                     return Ok(result);

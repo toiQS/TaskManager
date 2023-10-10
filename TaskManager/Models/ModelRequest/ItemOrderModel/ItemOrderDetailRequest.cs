@@ -1,6 +1,6 @@
 ﻿namespace TaskManager.Models.ModelRequest.ItemOrderModel
 {
-    public class ItemOrderDetailResponse
+    public class ItemOrderDetailRequest
     {
         public long ItemOrderId { get; set; }
         public string ProductId { get; set; } = string.Empty;

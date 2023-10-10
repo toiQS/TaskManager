@@ -6,6 +6,8 @@ using TaskManager.Models.ModelRequest.ProductImportModel;
 using TaskManager.Models.ModelResponse;
 using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json.Linq;
+using Microsoft.Build.Construction;
+using ENTITY;
 
 namespace TaskManager.Controllers
 {
@@ -19,7 +21,7 @@ namespace TaskManager.Controllers
             _context = context;
             _logger = logger;
         }
-        [HttpGet("{importId}")]
+        [HttpGet]
         public async Task<ActionResult<ICollection<ProductImportIndexRequest>>> GetProductImportByImportId(string importId){
             if(_context.ProductImports == null){
                 return Problem("không thể truy cập dữ liệu");
@@ -54,49 +56,45 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
-        public async Task<IActionResult> CreateProductImport(ProductImportResponse newitem){
-            if(ModelState.IsValid){
-                if(_context.ProductImports == null){
-                    return Problem("không thể truy cập dữ liệu");
+        public async Task<IActionResult> CreateProductImport(ProductImportResponse newItem)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.ProductImports == null || _context.ProductWarehouse == null)
+                {
+                    return Problem("Không thể truy cập vào cơ sở dữ liệu");
                 }
-                if(CheckItemExits(newitem.ProductImportId)){
-                    return Problem("dữ liệu đã tồn tại");
-                }
-                var item = new ProductImport{
-                    ProductId = newitem.ProductId,
-                    ProductImportId = newitem.ProductImportId,
-                    ImportBillId = newitem.ImportBillId,
-                    Quantity = newitem.Quantity,
-                    PriceOfEachProduct = newitem.PriceOfEachProduct
+                var item = new ProductImport
+                {
+                    ImportBillId = newItem.ImportBillId,
+                    PriceOfEachProduct = newItem.PriceOfEachProduct,
+                    ProductId = newItem.ProductId,
+                    Quantity = newItem.Quantity,
                 };
-                try{
-                    var warehouseItem = await _context.ProductWarehouse.Where(w => w.ProductId == item.ProductId).FirstOrDefaultAsync();
-                    if(warehouseItem != null){
-                        warehouseItem.ProductId = item.ProductId;
-                        warehouseItem.ImportPriceOfEachProduct = item.PriceOfEachProduct;
-                        warehouseItem.Quantity += item.Quantity;
-                        try{
-                            _context.ProductWarehouse.Update(warehouseItem);
-                            
-                        }
-                        catch(Exception ex){
-                            return Problem("không thể cập nhật dữ liệu vào kho hàng; " + ex.Message);
-                        }
-                    }
-                    else{
-                        return Problem("không tìm thấy kho hàng");
-                    }
+                try
+                {
+                    var productInWarehouse = await _context.ProductWarehouse
+                        .Where(x => x.ProductId == newItem.ProductId)
+                        .FirstOrDefaultAsync();
+                    if (productInWarehouse != null)
+                    {
+                        productInWarehouse.ImportPriceOfEachProduct = newItem.PriceOfEachProduct;
+                        productInWarehouse.Quantity += newItem.Quantity;
 
+                        _context.ProductWarehouse.Update(productInWarehouse);
+                    }
                     _context.ProductImports.Add(item);
                     await _context.SaveChangesAsync();
                 }
-                catch(Exception ex){
-                    return Problem("không thể cập nhật dữ liệu; " + ex.Message);    
+                catch (Exception ex)
+                {
+                    return Problem($"Lỗi: {ex.Message}");
                 }
-                return CreatedAtAction(nameof(GetProductImportById), new { productimportId = newitem.ProductImportId }, newitem);
+                return Ok("tạo thành công");
             }
-            return BadRequest("dữ liệu đầu vào không đúng");
+            return BadRequest("Dữ liệu đầu vào không đúng");
         }
+
         [HttpPut("{productimportId}")]
         public async Task<IActionResult> UpdateProductImport(long productimportId, ProductImportResponse newitem){
             if(ModelState.IsValid && productimportId > 0){

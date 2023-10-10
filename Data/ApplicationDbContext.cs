@@ -12,7 +12,7 @@ namespace Data
         public DbSet<Image> Images { get; set; }
         public DbSet<ImportBill> ImportBills { get; set; }
         public DbSet<ItemOrder> ItemOrders { get; set; }
-        public DbSet<Order> OrderOrders { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImport> ProductImports { get; set; }
         public DbSet<ProductWarehouse> ProductWarehouse { get; set; }
