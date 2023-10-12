@@ -3,6 +3,7 @@ using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ModelRequest.BrandModel;
+using TaskManager.Models.ModelRequest.ProductModel;
 using TaskManager.Models.ModelResponse;
 
 namespace TaskManager.Controllers
@@ -48,8 +49,13 @@ namespace TaskManager.Controllers
                             BrandId = brand.BrandId,
                             BrandName = brand.BrandName,
                             BrandInfo = brand.BrandInfo,
-                            Products = brand.Products
+                            Products = brand.Products.Select(x => new ProductIndexRequest
+                            {
+                                ProductName = x.ProductName,
+                                ProductId = x.ProductId,
+                            }).ToArray()
                         };
+
                         return Ok(result);
                     }
                     return NotFound("Không tìm thấy thương hiệu");

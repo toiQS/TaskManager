@@ -22,14 +22,14 @@ namespace TaskManager.Controllers
         }
         // GET: api/<ProductController>
         [HttpGet]
-        public async Task<ActionResult<ICollection<ProductIndexModel>>> GetAllProductAsync()
+        public async Task<ActionResult<ICollection<ProductIndexRequest>>> GetAllProductAsync()
         {
             if (_context.Products == null)
             {
                 return Problem("không thể truy cập dữ liệu");
             }
             var product = await _context.Products.ToListAsync();
-            var result = product.Select(p => new ProductIndexModel
+            var result = product.Select(p => new ProductIndexRequest
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName
