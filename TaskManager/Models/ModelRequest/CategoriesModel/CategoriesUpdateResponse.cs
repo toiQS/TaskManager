@@ -1,8 +1,7 @@
-﻿namespace TaskManager.Models.ModelResponse
+﻿namespace TaskManager.Models.ModelRequest.CategoriesModel
 {
-    public class CategoriesResponse
+    public class CategoriesUpdateResponse
     {
-        public string CategoryId { get; set; } = string.Empty;
         public string CategoryName { get; set; } = string.Empty;
         public string CategoryInfo { get; set; } = string.Empty;
     }

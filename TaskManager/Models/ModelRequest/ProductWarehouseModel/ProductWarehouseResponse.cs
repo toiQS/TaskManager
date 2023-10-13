@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Models.ModelResponse
+﻿namespace TaskManager.Models.ModelRequest.ProductWarehouseModel
 {
     public class ProductWarehouseResponse
     {

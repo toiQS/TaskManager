@@ -1,8 +1,7 @@
-﻿namespace TaskManager.Models.ModelResponse
+﻿namespace TaskManager.Models.ModelRequest.BrandModel
 {
-    public class BrandResponse
+    public class BrandUpdateResponse
     {
-        public string BrandId { get; set; } = string.Empty;
         public string BrandName { get; set; } = string.Empty;
         public string BrandInfo { get; set; } = string.Empty;
     }

@@ -4,7 +4,7 @@ using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ModelRequest.ImportBillModel;
-using TaskManager.Models.ModelResponse;
+using TaskManager.Models.ModelRequest.ProductImportModel;
 
 namespace MyApp.Namespace
 {
@@ -52,7 +52,7 @@ namespace MyApp.Namespace
                         WarehouseId = import.WarehouseId,
                         SupplierId = import.SupplierId,
                         CreateAt = import.CreateAt,
-                        ListProduct = import.ListProduct
+                        
                     };
                     return Ok(result);
                 }

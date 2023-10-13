@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ModelRequest.Categories;
 using TaskManager.Models.ModelRequest.CategoriesModel;
+using TaskManager.Models.ModelRequest.ProductModel;
 using TaskManager.Models.ModelResponse;
 
 namespace TaskManager.Controllers
@@ -51,7 +52,11 @@ namespace TaskManager.Controllers
                         CategoryId = category.CategoryId,
                         CategoryName = category.CategoryName,
                         CategoryInfo = category.CategoryInfo,
-                        Products = category.Products
+                        Products = category.Products.Select(x => new ProductIndexRequest
+                        {
+                            ProductId = x.ProductId,
+                            ProductName = x.ProductName,
+                        }).ToList(),
                     };
                     return Ok(result);
                 }
@@ -60,7 +65,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpPost]
-        public async Task<IActionResult> CreateCategoryAsync(CategoriesResponse newcategory)
+        public async Task<IActionResult> CreateCategoryAsync(CategoriesCreateResponse newcategory)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +97,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{categoryId}")]
-        public async Task<IActionResult> UpdateCategoryAsync(string categoryId, CategoriesResponse newcategory)
+        public async Task<IActionResult> UpdateCategoryAsync(string categoryId, CategoriesUpdateResponse newcategory)
         {
             if (string.IsNullOrEmpty(categoryId) && ModelState.IsValid)
             {
@@ -105,7 +110,7 @@ namespace TaskManager.Controllers
                 {
                     currentcategory.CategoryInfo = newcategory.CategoryInfo;
                     currentcategory.CategoryName = newcategory.CategoryName;
-                    currentcategory.CategoryId = newcategory.CategoryId;
+
 
                     try
                     {

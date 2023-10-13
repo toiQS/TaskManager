@@ -1,6 +1,7 @@
 using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Evaluation;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ModelRequest.BrandModel;
 using TaskManager.Models.ModelRequest.ProductModel;
@@ -65,7 +66,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpPost]
-        public async Task<IActionResult> CreateBrandAsync(BrandResponse newbrand)
+        public async Task<IActionResult> CreateBrandAsync(BrandCreateResponse newbrand)
         {
             if (ModelState.IsValid)
             {
@@ -97,23 +98,38 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu nhập vào không đúng");
         }
         [HttpPut("{brandId}")]
-        public async Task<IActionResult> UpdateBrandAsync(string brandId, BrandResponse newbrand)
+        public async Task<IActionResult> UpdateBrandAsync(string brandId, BrandUpdateResponse newbrand)
         {
             if (ModelState.IsValid && !string.IsNullOrEmpty(brandId))
             {
-                if (_context.Brands == null)
+                if (_context.Brands == null || _context.Products == null)
                 {
                     return Problem("không thể truy cập dữ liệu");
                 }
-                var currentbrand = await _context.Brands.Where(b => b.BrandId == brandId).Include(b => b.Products).FirstOrDefaultAsync();
+                var currentbrand = await _context.Brands.Where(b => b.BrandId == brandId).Include(x => x.BrandId).FirstOrDefaultAsync();
                 if (currentbrand != null)
                 {
-                    currentbrand.BrandId = newbrand.BrandId;
                     currentbrand.BrandName = newbrand.BrandName;
                     currentbrand.BrandInfo = newbrand.BrandInfo;
-
+                    
                     try
                     {
+                        //var item = await _context.Products.Where(x => x.BrandId == currentbrand.BrandId).ToListAsync();
+                        //if (item != null)
+                        //{
+                        //    foreach(var product in item)
+                        //    {
+                        //        product.BrandId = newbrand.BrandId;
+                        //        try
+                        //        {
+                        //            _context.Products.Update(product);
+                        //        }
+                        //        catch(Exception ex)
+                        //        {
+                        //            return Problem("không thể cập nhật lại sản phẩm");
+                        //        }
+                        //    }
+                        //}
                         _context.Brands.Update(currentbrand);
                         await _context.SaveChangesAsync();
                     }

@@ -1,4 +1,5 @@
 ﻿using ENTITY;
+using TaskManager.Models.ModelRequest.ProductModel;
 
 namespace TaskManager.Models.ModelRequest.CategoriesModel
 {
@@ -7,6 +8,6 @@ namespace TaskManager.Models.ModelRequest.CategoriesModel
         public string CategoryId { get; set; } = string.Empty;
         public string CategoryName { get; set; } = string.Empty;
         public string CategoryInfo { get; set; } = string.Empty;
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<ProductIndexRequest> Products { get; set; } = new List<ProductIndexRequest>();
     }
 }

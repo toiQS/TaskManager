@@ -3,8 +3,8 @@ using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using TaskManager.Models.ModelRequest.ProductImportModel;
 using TaskManager.Models.ModelRequest.ProductModel;
-using TaskManager.Models.ModelResponse;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TaskManager.Controllers
@@ -56,7 +56,9 @@ namespace TaskManager.Controllers
                         ProductId = product.ProductId,
                         ProductName = product.ProductName,
                         ProductInfo = product.ProductInfo,
-                        ProductImage = product.ProductImage
+                        ProductImage = product.ProductImage,
+                        BrandId = product.BrandId,
+                        CategoryId = product.CategoryId,
                     };
                     return Ok(result);
                 }

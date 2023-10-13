@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Entity;
 using TaskManager.Models.ModelRequest.ProductImportModel;
-using TaskManager.Models.ModelResponse;
 using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json.Linq;
 using Microsoft.Build.Construction;
 using ENTITY;
+using TaskManager.Models.ModelRequest.ProductModel;
 
 namespace TaskManager.Controllers
 {
