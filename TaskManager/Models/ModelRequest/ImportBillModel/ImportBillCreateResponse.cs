@@ -1,6 +1,6 @@
 ﻿namespace TaskManager.Models.ModelRequest.ImportBillModel
 {
-    public class ImportBillResponse
+    public class ImportBillCreateResponse
     {
         public string ImportBillId { get; set; } = string.Empty;
         public string WarehouseId { get; set; } = string.Empty;

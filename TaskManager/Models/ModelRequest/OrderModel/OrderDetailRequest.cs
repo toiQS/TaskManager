@@ -1,4 +1,5 @@
 ﻿using ENTITY;
+using TaskManager.Models.ModelRequest.ItemOrderModel;
 
 namespace TaskManager.Models.ModelRequest.OrderModelModel
 {
@@ -6,6 +7,6 @@ namespace TaskManager.Models.ModelRequest.OrderModelModel
     {
         public string OrderId { get; set; } = string.Empty;
         public DateTime CreateAt { get; set; }
-        public ICollection<ItemOrder> itemOrders { get; set; } = new List<ItemOrder>();
+        public ICollection<ItemOrderIndexRequest> itemOrders { get; set; } = new List<ItemOrderIndexRequest>();
     }
 }

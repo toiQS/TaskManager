@@ -46,13 +46,18 @@ namespace MyApp.Namespace
                 var import = await _context.ImportBills.Where(i => i.ImportBillId == importBillId).Include(i => i.ListProduct).FirstOrDefaultAsync();
                 if (import != null)
                 {
-                    var result = new ImportBill
+                    var result = new ImportBillDetailRequest
                     {
                         ImportBillId = import.ImportBillId,
                         WarehouseId = import.WarehouseId,
                         SupplierId = import.SupplierId,
                         CreateAt = import.CreateAt,
-                        
+                        ListProduct = import.ListProduct.Select(item => new ProductImportIndexRequest
+                        {
+                            ImportBillId = item.ImportBillId,
+                            ProductId = item.ProductId,
+                            ProductImportId = item.ProductImportId,
+                        }).ToList(),
                     };
                     return Ok(result);
                 }
@@ -61,7 +66,7 @@ namespace MyApp.Namespace
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
-        public async Task<ActionResult<ImportBillResponse>> CreateImportBill(ImportBillResponse newimportBill)
+        public async Task<ActionResult<ImportBillCreateResponse>> CreateImportBill(ImportBillCreateResponse newimportBill)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +98,7 @@ namespace MyApp.Namespace
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{importBillId}")]
-        public async Task<ActionResult<ImportBillResponse>> UpdateImportBill(string importBillId, ImportBillResponse newimportBill)
+        public async Task<ActionResult<ImportBillCreateResponse>> UpdateImportBill(string importBillId, ImportBillUpdateResponse newimportBill)
         {
             if (!string.IsNullOrEmpty(importBillId) && ModelState.IsValid)
             {
@@ -105,7 +110,6 @@ namespace MyApp.Namespace
                 if (item != null)
                 {
                     item.SupplierId = newimportBill.SupplierId;
-                    item.ImportBillId = newimportBill.ImportBillId;
                     item.WarehouseId = newimportBill.WarehouseId;
                     item.CreateAt = DateTime.Now;
                     try
@@ -124,7 +128,7 @@ namespace MyApp.Namespace
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpDelete("{importBillId}")]
-        public async Task<ActionResult<ImportBillResponse>> DeleteImportBill(string importBillId)
+        public async Task<ActionResult<ImportBillCreateResponse>> DeleteImportBill(string importBillId)
         {
             if (!string.IsNullOrEmpty(importBillId))
             {
