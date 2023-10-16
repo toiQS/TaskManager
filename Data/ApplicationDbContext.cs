@@ -19,4 +19,6 @@ namespace Data
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Warehouse> Warehouse { get; set; }
     }
-}
+
+
+}   

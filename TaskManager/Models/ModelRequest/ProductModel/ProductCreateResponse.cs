@@ -1,6 +1,6 @@
-﻿namespace TaskManager.Models.ModelRequest.ProductImportModel
+﻿namespace TaskManager.Models.ModelRequest.ProductModel
 {
-    public class ProductResponse
+    public class ProductCreateResponse
     {
         public string ProductId { get; set; } = string.Empty;
         public string ProductName { get; set; } = string.Empty;

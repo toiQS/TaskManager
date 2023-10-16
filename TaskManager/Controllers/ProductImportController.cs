@@ -7,7 +7,6 @@ using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json.Linq;
 using Microsoft.Build.Construction;
 using ENTITY;
-using TaskManager.Models.ModelRequest.ProductModel;
 
 namespace TaskManager.Controllers
 {
@@ -34,13 +33,13 @@ namespace TaskManager.Controllers
             });
             return Ok(result);
         }
-        [HttpGet("{productimportId}")]
-        public async Task<ActionResult<ProductImportDetailRequest>> GetProductImportById(long productimportId){
-            if(productimportId > 0){
+        [HttpGet("{productImportId}")]
+        public async Task<ActionResult<ProductImportDetailRequest>> GetProductImportById(long productImportId){
+            if(productImportId > 0){
                 if(_context.ProductImports == null){
                     return Problem("không thể truy cập dữ liệu");
                 }
-                var item = await _context.ProductImports.Where(i => i.ProductImportId == productimportId).FirstOrDefaultAsync();
+                var item = await _context.ProductImports.Where(i => i.ProductImportId == productImportId).FirstOrDefaultAsync();
                 if(item != null){
                     var result = new ProductImportDetailRequest{
                         ProductId = item.ProductId,

@@ -1,6 +1,9 @@
 ﻿using Data;
+using ENTITY;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using TaskManager.Models.ModelRequest.ItemOrderModel;
 
 namespace TaskManager.Controllers
@@ -32,8 +35,8 @@ namespace TaskManager.Controllers
             }).ToList();
             return Ok(result);
         }
-        [HttpGet("{itemOrderId")]
-        public async Task<ActionResult<ItemOrderDetailRequest>> GetItemOrder(long itemOrderId)
+        [HttpGet("{itemOrderId}")]
+        public async Task<ActionResult<ItemOrderDetailRequest>> GetItemOrderByItemOrderId(long itemOrderId)
         {
             if(itemOrderId > 0)
             {
@@ -59,6 +62,91 @@ namespace TaskManager.Controllers
             }
             return BadRequest("dữ liệu đầu vào không đúng");
         }
-        
+        [HttpPost]
+        public async Task<IActionResult> AddItemToOrder(ItemOrderResponse newItem)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.ItemOrders == null)
+                {
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                var item = new ItemOrder
+                {
+                    OrderId = newItem.OrderId,
+                    ProductId = newItem.ProductId,
+                    Quantity = newItem.Quantity,
+                    SellPrice = newItem.SellPrice,
+                };
+                try
+                {
+                    _context.ItemOrders.Add(item);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return Problem(ex.Message);
+                }
+                return CreatedAtAction(nameof(GetItemOrderByItemOrderId), new { itemOrderId = item.OrderId }, item);
+            }
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        [HttpPut("{itemOrderId}")]
+        public async Task<IActionResult> ItemUpdate(long itemOrderId, ItemOrderResponse newitem)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.ItemOrders == null)
+                {
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                var item = await _context.ItemOrders.Where(x => x.ItemOrderId == itemOrderId).FirstOrDefaultAsync();
+                if (item != null)
+                {
+                    item.OrderId = newitem.OrderId;
+                    item.ProductId = newitem.ProductId;
+                    item.Quantity = newitem.Quantity;
+                    try
+                    {
+                        _context.ItemOrders.Update(item);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        return Problem(ex.Message);
+                    }
+                    return NoContent();
+                }
+                return NotFound("không tìm thấy dữ liệu");
+            }
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        [HttpDelete("{itemOrderId}")]
+        public async Task<IActionResult> ItemDelete(long itemOrderId)
+        {
+            if (itemOrderId > 0)
+            {
+                if (_context.ItemOrders == null)
+                {
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                var item = await _context.ItemOrders.Where(x => x.ItemOrderId == itemOrderId).FirstOrDefaultAsync();
+                if (item != null)
+                {
+                    try
+                    {
+                        _context.ItemOrders.Remove(item);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        return Problem(ex.Message);
+                    }
+                    return NoContent();
+                }
+                return NotFound("không tìm thấy dữ liệu");
+            }
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
     }
 }

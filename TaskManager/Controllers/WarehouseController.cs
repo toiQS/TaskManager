@@ -2,6 +2,9 @@ using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Models.ModelRequest.ImportBillModel;
+using TaskManager.Models.ModelRequest.ProductImportModel;
+using TaskManager.Models.ModelRequest.ProductWarehouseModel;
 using TaskManager.Models.ModelRequest.WarehouseModel;
 
 namespace TaskManager.Controllers
@@ -49,8 +52,18 @@ namespace TaskManager.Controllers
                         WarehouseId = warehouse.WarehouseId,
                         WarehouseName = warehouse.WarehouseName,
                         WarehouseAddress = warehouse.WarehouseAddress,
-                        WarehouseItems = warehouse.WarehouseItems,
-                        ImportBillItems = warehouse.ImportBillItems
+                        WarehouseItems = warehouse.WarehouseItems.Select(x => new ProductWarehouseIndexRequest
+                        {
+                            ProductId = x.ProductId,
+                            ProductWarehouseId = x.ProductWarehouseId,
+                            UpdateAt = x.UpdateAt,
+                        }).ToList(),
+                        ImportBillItems = warehouse.ImportBillItems.Select(x => new ImportBillIndexRequest
+                        {
+                            CreateAt = x.CreateAt,
+                            ImportBillId = x.ImportBillId,
+                            
+                        }).ToList()
                     };
                     return Ok(result);
                 }
@@ -59,7 +72,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
-        public async Task<IActionResult> CreateWarehouseAsync(WarehouseResponse newwarehouse)
+        public async Task<IActionResult> CreateWarehouseAsync(WarehouseCreateResponse newwarehouse)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +104,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{warehouseId}")]
-        public async Task<IActionResult> UpdateWarehouseAsync(string warehouseId, WarehouseResponse newwarehouse)
+        public async Task<IActionResult> UpdateWarehouseAsync(string warehouseId, WarehouseUpdateResponse newwarehouse)
         {
             if (!string.IsNullOrEmpty(warehouseId) && ModelState.IsValid)
             {
@@ -104,7 +117,6 @@ namespace TaskManager.Controllers
                 {
                     currentwarehouse.WarehouseName = newwarehouse.WarehouseName;
                     currentwarehouse.WarehouseAddress = newwarehouse.WarehouseAddress;
-                    currentwarehouse.WarehouseId = newwarehouse.WarehouseId;
 
                     try
                     {

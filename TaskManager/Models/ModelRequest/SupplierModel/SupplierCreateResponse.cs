@@ -1,9 +1,6 @@
-﻿using ENTITY;
-using TaskManager.Models.ModelRequest.ImportBillModel;
-
-namespace TaskManager.Models.ModelRequest.SupplierModel
+﻿namespace TaskManager.Models.ModelRequest.SupplierModel
 {
-    public class SupplierDetailRequest
+    public class SupplierCreateResponse
     {
         public string? SupplierId { get; set; }
         public string? SupplierName { get; set; }
@@ -11,6 +8,5 @@ namespace TaskManager.Models.ModelRequest.SupplierModel
         public string SupplierEmail { get; set; } = string.Empty;
         public string SupplierPhone { get; set; } = string.Empty;
         public string TaxID { get; set; } = string.Empty;
-        public ICollection<ImportBillIndexRequest> BillList { get; set; } = new List<ImportBillIndexRequest>();
     }
 }

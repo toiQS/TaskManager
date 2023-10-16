@@ -3,7 +3,7 @@ using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using TaskManager.Models.ModelRequest.ProductImportModel;
+using TaskManager.Models.ModelRequest.ImageModel;
 using TaskManager.Models.ModelRequest.ProductModel;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -56,7 +56,12 @@ namespace TaskManager.Controllers
                         ProductId = product.ProductId,
                         ProductName = product.ProductName,
                         ProductInfo = product.ProductInfo,
-                        ProductImage = product.ProductImage,
+                        ProductImage = product.ProductImage.Select(x => new ImageIndexRequest
+                        {
+                            ImageId = x.ImageId,
+                            ImageName = x.ImageName,
+                            ProductId = product.ProductId,
+                        }).ToList(),
                         BrandId = product.BrandId,
                         CategoryId = product.CategoryId,
                     };
@@ -67,7 +72,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
-        public async Task<IActionResult> CreateProductAsync(ProductResponse newproduct)
+        public async Task<IActionResult> CreateProductAsync(ProductCreateResponse newproduct)
         {
             if (ModelState.IsValid)
             {
@@ -102,7 +107,7 @@ namespace TaskManager.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("{productId}")]
-        public async Task<IActionResult> UpdateProductAsync(string productId, ProductResponse newproduct)
+        public async Task<IActionResult> UpdateProductAsync(string productId, ProductUpdateResponse newproduct)
         {
             if (!string.IsNullOrEmpty(productId) && ModelState.IsValid)
             {
@@ -112,8 +117,7 @@ namespace TaskManager.Controllers
                 }
                 var currentproduct = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
                 if (currentproduct != null)
-                {
-                    currentproduct.ProductId = newproduct.ProductId;
+                { 
                     currentproduct.ProductName = newproduct.ProductName;
                     currentproduct.ProductInfo = newproduct.ProductInfo;
                     currentproduct.BrandId = newproduct.BrandId;

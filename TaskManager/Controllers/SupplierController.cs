@@ -2,6 +2,7 @@ using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Models.ModelRequest.ImportBillModel;
 using TaskManager.Models.ModelRequest.SupplierModel;
 
 namespace TaskManager.Controllers
@@ -52,7 +53,11 @@ namespace TaskManager.Controllers
                         SupplierName = supplier.SupplierName,
                         SupplierPhone = supplier.SupplierPhone,
                         TaxID = supplier.TaxID,
-                        BillList = supplier.BillList
+                        BillList = supplier.BillList.Select(x => new ImportBillIndexRequest
+                        {
+                            ImportBillId = x.ImportBillId,
+                            CreateAt = x.CreateAt,
+                        }).ToList(),
                     };
                     return Ok(result);
                 }
@@ -61,7 +66,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
-        public async Task<ActionResult<SupplierResponse>> CreateSupplierAsync(SupplierResponse newsupplier)
+        public async Task<ActionResult<SupplierCreateResponse>> CreateSupplierAsync(SupplierCreateResponse newsupplier)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +81,8 @@ namespace TaskManager.Controllers
                     SupplierId = newsupplier.SupplierId,
                     SupplierName = newsupplier.SupplierName,
                     TaxID = newsupplier.TaxID,
-                    BillList = new List<ImportBill>()
+                    BillList = new List<ImportBill>(),
+                    
                 };
 
                 try
@@ -93,7 +99,7 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPut("{supplierId}")]
-        public async Task<ActionResult<SupplierResponse>> UpdateSupplierAsync(string supplierId, SupplierResponse newsupplier)
+        public async Task<ActionResult<SupplierCreateResponse>> UpdateSupplierAsync(string supplierId, SupplierUpdateResponse newsupplier)
         {
             if (!string.IsNullOrEmpty(supplierId) && ModelState.IsValid)
             {
@@ -106,7 +112,6 @@ namespace TaskManager.Controllers
                 {
                     supplier.SupplierAddress = newsupplier.SupplierAddress;
                     supplier.SupplierEmail = newsupplier.SupplierEmail;
-                    supplier.SupplierId = newsupplier.SupplierId;
                     supplier.SupplierName = newsupplier.SupplierName;
                     supplier.TaxID = newsupplier.TaxID;
                     try
@@ -118,7 +123,7 @@ namespace TaskManager.Controllers
                     {
                         return Problem($"không thể cập nhật dữ liệu; {ex.Message}");
                     }
-                    return CreatedAtAction(nameof(GetSupplierByIdAsync), new { supplierId = newsupplier.SupplierId }, newsupplier);
+                    return NoContent();
                 }
                 return NotFound("không tìm thấy dữ liệu");
             }

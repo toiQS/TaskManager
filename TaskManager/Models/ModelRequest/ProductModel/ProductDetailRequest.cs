@@ -1,4 +1,5 @@
 ﻿using ENTITY;
+using TaskManager.Models.ModelRequest.ImageModel;
 
 namespace TaskManager.Models.ModelRequest.ProductModel
 {
@@ -7,7 +8,7 @@ namespace TaskManager.Models.ModelRequest.ProductModel
         public string ProductId { get; set; } = string.Empty;
         public string ProductName { get; set; } = string.Empty;
         public string ProductInfo { get; set; } = string.Empty;
-        public ICollection<Image> ProductImage { get; set; } = new List<Image>();
+        public ICollection<ImageIndexRequest> ProductImage { get; set; } = new List<ImageIndexRequest>();
         public string CategoryId { get; set; } = string.Empty;
         public string BrandId { get; set; } = string.Empty;
     }

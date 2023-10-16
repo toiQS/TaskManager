@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Models.ModelRequest.ProductModel
+﻿namespace TaskManager.Models.ModelRequest.ProductImportModel
 {
     public class ProductImportResponse
     {

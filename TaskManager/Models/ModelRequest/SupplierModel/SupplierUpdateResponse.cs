@@ -1,8 +1,7 @@
 ﻿namespace TaskManager.Models.ModelRequest.SupplierModel
 {
-    public class SupplierResponse
+    public class SupplierUpdateResponse
     {
-        public string? SupplierId { get; set; }
         public string? SupplierName { get; set; }
         public string? SupplierAddress { get; set; }
         public string SupplierEmail { get; set; } = string.Empty;
