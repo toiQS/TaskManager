@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Net;
 using TaskManager.Models.ModelRequest.ItemOrderModel;
 
 namespace TaskManager.Controllers
@@ -67,19 +68,42 @@ namespace TaskManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_context.ItemOrders == null)
+                if (_context.ItemOrders == null || _context.ProductWarehouse == null)
                 {
                     return Problem("không thể truy cập dữ liệu");
+                }
+                var GetPrice = await _context.ProductWarehouse.Where(x => x.ProductId == newItem.ProductId).FirstOrDefaultAsync();
+                if(GetPrice == null)
+                {
+                    return NotFound("không tìm thấy dữ liệu");
                 }
                 var item = new ItemOrder
                 {
                     OrderId = newItem.OrderId,
                     ProductId = newItem.ProductId,
                     Quantity = newItem.Quantity,
-                    SellPrice = newItem.SellPrice,
+                    SellPrice = GetPrice.ImportPriceOfEachProduct
                 };
                 try
                 {
+                    var ItemInWarehouse = await _context.ProductWarehouse.Where(x => x.ProductId == newItem.ProductId).FirstOrDefaultAsync();
+                    if(ItemInWarehouse != null)
+                    {
+                        if (ItemInWarehouse.Quantity > newItem.Quantity)
+                        {
+                            ItemInWarehouse.Quantity -= newItem.Quantity;
+                            try
+                            {
+                                _context.ProductWarehouse.Update(ItemInWarehouse);
+                                await _context.SaveChangesAsync();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Problem(ex.Message);
+                            }
+                        }
+                        else return Problem("số lượng không đủ");
+                    }
                     _context.ItemOrders.Add(item);
                     await _context.SaveChangesAsync();
                 }
