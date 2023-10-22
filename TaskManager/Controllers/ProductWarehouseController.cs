@@ -2,7 +2,7 @@ using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models.ModelRequest.ProductWarehouseModel;
+using TaskManager.Models.ProductWarehouseModel;
 namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]

@@ -1,14 +1,10 @@
 ﻿using Data;
 using ENTITY;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Construction;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models.ModelRequest.ItemOrderModel;
-using TaskManager.Models.ModelRequest.OrderModel;
-using TaskManager.Models.ModelRequest.OrderModelModel;
+using TaskManager.Models.ItemOrderModel;
+using TaskManager.Models.OrderModel;
 
 namespace TaskManager.Controllers
 {

@@ -3,8 +3,8 @@ using Entity;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models.ModelRequest.ImportBillModel;
-using TaskManager.Models.ModelRequest.ProductImportModel;
+using TaskManager.Models.ImportBillModel;
+using TaskManager.Models.ProductImportModel;
 
 namespace MyApp.Namespace
 {

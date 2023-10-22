@@ -2,8 +2,8 @@ using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models.ModelRequest.ImportBillModel;
-using TaskManager.Models.ModelRequest.SupplierModel;
+using TaskManager.Models.ImportBillModel;
+using TaskManager.Models.SupplierModel;
 
 namespace TaskManager.Controllers
 {

@@ -2,10 +2,8 @@ using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models.ModelRequest.Categories;
-using TaskManager.Models.ModelRequest.CategoriesModel;
-using TaskManager.Models.ModelRequest.ProductModel;
-using TaskManager.Models.ModelResponse;
+using TaskManager.Models.CategoriesModel;
+using TaskManager.Models.ProductModel;
 
 namespace TaskManager.Controllers
 {

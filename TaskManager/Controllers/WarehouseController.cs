@@ -2,10 +2,9 @@ using Data;
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models.ModelRequest.ImportBillModel;
-using TaskManager.Models.ModelRequest.ProductImportModel;
-using TaskManager.Models.ModelRequest.ProductWarehouseModel;
-using TaskManager.Models.ModelRequest.WarehouseModel;
+using TaskManager.Models.ImportBillModel;
+using TaskManager.Models.ProductWarehouseModel;
+using TaskManager.Models.WarehouseModel;
 
 namespace TaskManager.Controllers
 {
@@ -164,5 +163,6 @@ namespace TaskManager.Controllers
         private bool CheckWarehouseExists(string warehouseId){
             return _context.Warehouse.Any(w => w.WarehouseId == warehouseId);
         }
+        
     }
 }

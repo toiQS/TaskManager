@@ -10,6 +10,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //builder.Services.AddDefaultIdentity<ApplicationDbContext>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+builder.Services.AddLogging(builder =>
+{
+    builder.AddConsole();
+    builder.AddDebug();
+});
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings.

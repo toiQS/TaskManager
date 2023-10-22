@@ -90,8 +90,6 @@ namespace Data
                     UserId = "2",
                     RoleId = "2"
                 }
-
-
             );
         }
     }

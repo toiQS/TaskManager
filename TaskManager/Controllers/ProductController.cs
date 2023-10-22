@@ -2,9 +2,8 @@
 using ENTITY;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using TaskManager.Models.ModelRequest.ImageModel;
-using TaskManager.Models.ModelRequest.ProductModel;
+using TaskManager.Models.ImageModel;
+using TaskManager.Models.ProductModel;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TaskManager.Controllers

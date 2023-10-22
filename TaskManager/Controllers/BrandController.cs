@@ -1,14 +1,15 @@
 using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Evaluation;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ModelRequest.BrandModel;
-using TaskManager.Models.ModelRequest.ProductModel;
 using TaskManager.Models.ModelResponse;
+using TaskManager.Models.ProductModel;
 
 namespace TaskManager.Controllers
 {
+    [Authorize(Roles ="Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class BrandController : ControllerBase
@@ -21,6 +22,7 @@ namespace TaskManager.Controllers
             _logger = logger;
         }
         [HttpGet]
+        [Authorize(Roles ="User")]
         public async Task<ActionResult<ICollection<BrandIndexRequest>>> GetAllBrandAsync()
         {
             if (_context.Brands == null)
