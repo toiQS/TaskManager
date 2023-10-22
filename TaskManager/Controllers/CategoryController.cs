@@ -156,5 +156,14 @@ namespace TaskManager.Controllers
         private bool CheckCategoryExists(string categoryId){
             return _context.Categories.Any(c => c.CategoryId == categoryId);
         }
+        [HttpGet("Action")]
+        public IActionResult Action()
+        {
+            _logger.LogInformation("Thông điệp log thông tin"); // Ghi thông tin
+            _logger.LogWarning("Thông điệp log cảnh báo");        // Ghi cảnh báo
+            _logger.LogError("Thông điệp log lỗi");              // Ghi lỗi
+                                                                 // Các cấp độ và phong cách ghi log khác...
+            return Ok();
+        }
     }
 }

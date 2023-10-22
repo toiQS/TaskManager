@@ -3,13 +3,14 @@ using ENTITY;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using TaskManager.Models.ModelRequest.BrandModel;
 using TaskManager.Models.ModelResponse;
 using TaskManager.Models.ProductModel;
 
 namespace TaskManager.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class BrandController : ControllerBase
@@ -175,6 +176,15 @@ namespace TaskManager.Controllers
         }
         private bool CheckBrandExists(string brandId){
             return _context.Brands.Any(e => e.BrandId == brandId);
+        }
+        [HttpGet("Action")]
+        public IActionResult Action()
+        {
+            _logger.LogInformation("Thông điệp log thông tin"); // Ghi thông tin
+            _logger.LogWarning("Thông điệp log cảnh báo");        // Ghi cảnh báo
+            _logger.LogError("Thông điệp log lỗi");              // Ghi lỗi
+                                                                 // Các cấp độ và phong cách ghi log khác...
+            return Ok();
         }
     }
 }

@@ -15,5 +15,15 @@ namespace TaskManager.Controllers
             _userManager = userManager;
             _logger = logger;
         }
+        [HttpGet]
+        public async Task<IActionResult> Login()
+        {
+            return Ok();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Resign()
+        {
+            return Ok();
+        }
     }
 }

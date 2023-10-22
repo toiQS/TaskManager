@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity;
 using Microsoft.Identity.Client;
+using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -10,6 +11,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //builder.Services.AddDefaultIdentity<ApplicationDbContext>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo
+    .File("Log/app.log", rollingInterval: RollingInterval.Day)
+    
+    .CreateLogger();
 builder.Services.AddLogging(builder =>
 {
     builder.AddConsole();

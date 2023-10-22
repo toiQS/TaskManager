@@ -170,5 +170,14 @@ namespace TaskManager.Controllers
         private bool CheckImageExits(string imageId){
             return _context.Images.Any(e => e.ImageId == imageId);
         }
+        [HttpGet("Action")]
+        public IActionResult Action()
+        {
+            _logger.LogInformation("Thông điệp log thông tin"); // Ghi thông tin
+            _logger.LogWarning("Thông điệp log cảnh báo");        // Ghi cảnh báo
+            _logger.LogError("Thông điệp log lỗi");              // Ghi lỗi
+                                                                 // Các cấp độ và phong cách ghi log khác...
+            return Ok();
+        }
     }
 }

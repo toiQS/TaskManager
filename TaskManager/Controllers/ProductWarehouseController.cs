@@ -159,5 +159,14 @@ namespace TaskManager.Controllers
         private bool CheckItemExits(long productwarehouseId){
             return _context.ProductWarehouse.Any(e => e.ProductWarehouseId == productwarehouseId);
         }
+        [HttpGet("Action")]
+        public IActionResult Action()
+        {
+            _logger.LogInformation("Thông điệp log thông tin"); // Ghi thông tin
+            _logger.LogWarning("Thông điệp log cảnh báo");        // Ghi cảnh báo
+            _logger.LogError("Thông điệp log lỗi");              // Ghi lỗi
+                                                                 // Các cấp độ và phong cách ghi log khác...
+            return Ok();
+        }
     }
 }
