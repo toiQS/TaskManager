@@ -1,29 +1,25 @@
 ﻿using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TaskManager.Models.AuthModel;
 
 namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class authController : ControllerBase
+    [Authorize(Roles ="User")]
+    public class AuthController : ControllerBase
     {
-        private readonly UserManager<ApplicationDbContext> _userManager;
-        private readonly ILogger<authController> _logger;
-        public authController(UserManager<ApplicationDbContext> userManager, ILogger<authController> logger)
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ILogger<AuthController> logger)
         {
+            _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
         }
-        [HttpGet]
-        public async Task<IActionResult> Login()
-        {
-            return Ok();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Resign()
-        {
-            return Ok();
-        }
+        
     }
 }
