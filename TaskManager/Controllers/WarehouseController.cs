@@ -1,5 +1,6 @@
 using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ImportBillModel;
@@ -10,6 +11,7 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class WarehouseController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

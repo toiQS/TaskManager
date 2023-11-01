@@ -1,6 +1,7 @@
 using Data;
 using Entity;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ImportBillModel;
@@ -10,6 +11,7 @@ namespace MyApp.Namespace
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class ImportBillController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

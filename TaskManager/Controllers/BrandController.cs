@@ -10,7 +10,7 @@ using TaskManager.Models.ProductModel;
 
 namespace TaskManager.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class BrandController : ControllerBase
@@ -39,6 +39,7 @@ namespace TaskManager.Controllers
             return Ok(result);
         }
         [HttpGet("{brandId}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<BrandDetailRequest>> GetBrandByIdAsync(string brandId)
         {
             if (!string.IsNullOrEmpty(brandId))

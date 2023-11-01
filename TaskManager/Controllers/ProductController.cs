@@ -1,5 +1,6 @@
 ﻿using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ImageModel;
@@ -10,6 +11,7 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ProductController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -21,6 +23,7 @@ namespace TaskManager.Controllers
         }
         // GET: api/<ProductController>
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<ICollection<ProductIndexRequest>>> GetAllProductAsync()
         {
             if (_context.Products == null)
@@ -38,7 +41,7 @@ namespace TaskManager.Controllers
 
         // GET api/<ProductController>/5
         [HttpGet("{productId}")]
-        // POST api/<ProductController>
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<ProductDetailRequest>> GetProductByIdAsync(string productId)
         {
             if (_context.Products == null)

@@ -1,5 +1,6 @@
 ﻿using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ItemOrderModel;
@@ -8,6 +9,7 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "User")]
     public class ItemOrderController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -18,6 +20,7 @@ namespace TaskManager.Controllers
             _logger = logger;
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ICollection<ItemOrderIndexRequest>>> GetItems(string orderId)
         {
             if(_context.ItemOrders == null)
@@ -34,6 +37,7 @@ namespace TaskManager.Controllers
             return Ok(result);
         }
         [HttpGet("{itemOrderId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ItemOrderDetailRequest>> GetItemOrderByItemOrderId(long itemOrderId)
         {
             if(itemOrderId > 0)

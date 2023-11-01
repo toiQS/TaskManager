@@ -49,10 +49,45 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost("register")]
-        public async  Task<IActionResult> Register(IdentityUser newUser)
+        public async  Task<IActionResult> Register(RegisterModel newUser)
         {
-            return Ok(newUser);
-            
+            if(ModelState.IsValid)
+            {
+                if(_userManager.Users == null || _signInManager.UserManager == null)
+                {
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                var user = new IdentityUser
+                {
+                    Email = newUser.Email,
+                    UserName = newUser.UserName,
+                };
+                var result = await _userManager.CreateAsync(user,newUser.PasswordHard);
+                if (result.Succeeded)
+                {
+                    // Đăng ký thành công, thực hiện các hành động cần thiết.
+                    // Ví dụ: gửi email xác nhận, đăng nhập ngay lập tức, chuyển hướng, v.v.
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                return Ok(result);
+            }
+            return BadRequest("dữ liệu đầu vào không đúng");
+        }
+        [HttpGet("Action")]
+        public IActionResult Action()
+        {
+            _logger.LogInformation("Thông điệp log thông tin"); // Ghi thông tin
+            _logger.LogWarning("Thông điệp log cảnh báo");        // Ghi cảnh báo
+            _logger.LogError("Thông điệp log lỗi");              // Ghi lỗi
+                                                                 // Các cấp độ và phong cách ghi log khác...
+            return Ok();
         }
     }
 }

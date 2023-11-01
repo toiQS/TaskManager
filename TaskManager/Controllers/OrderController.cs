@@ -1,8 +1,11 @@
 ﻿using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Models.AuthModel;
 using TaskManager.Models.ItemOrderModel;
 using TaskManager.Models.OrderModel;
 
@@ -10,16 +13,20 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "User")]
     public class OrderController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<OrderController> _logger;
-        public OrderController(ApplicationDbContext context, ILogger<OrderController> logger)
+        private readonly UserManager<IdentityUser> _userManager;
+        public OrderController(ApplicationDbContext context, ILogger<OrderController> logger, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ICollection<OrderIndexRequest>>> GetOrders()
         {
            if(_context.Orders == null)
@@ -35,6 +42,7 @@ namespace TaskManager.Controllers
             return Ok(result);
         }
         [HttpGet("{orderId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<OrderDetailRequest>> GetOrderByOrderId(string orderId)
         {
             if(!string.IsNullOrEmpty(orderId))
@@ -63,11 +71,20 @@ namespace TaskManager.Controllers
             return BadRequest("dữ liệu đầu vào không đúng");
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(OrderCreateResponse newOrder)
+        public async Task<IActionResult> CreateOrder(OrderCreateResponse newOrder, string UserId)
         {
             if (ModelState.IsValid)
             {
-                if(_context.Orders == null)
+                if(_userManager.Users == null)
+                {
+                    return Problem("không thể truy cập dữ liệu");
+                }
+                var FindUser = await _userManager.Users.Where(x => x.Id == UserId).FirstOrDefaultAsync();
+                if (FindUser == null)
+                {
+                    return Problem("không tìm thấy người dùng");
+                }
+                if (_context.Orders == null)
                 {
                     return Problem("không thể truy cập dữ liệu");
                 }

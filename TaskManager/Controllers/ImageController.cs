@@ -1,5 +1,6 @@
 ﻿using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ImageModel;
@@ -11,6 +12,7 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ImageController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +25,7 @@ namespace TaskManager.Controllers
 
         // GET: api/<ImageController>
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<ICollection<ImageIndexRequest>>> GetImageByProductId(string productId)
         {
             if (_context.Images == null)
@@ -48,6 +51,7 @@ namespace TaskManager.Controllers
 
         // GET api/<ImageController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<ICollection<ImageDetailRequest>>> GetImageByImageId(string imageId)
         {
             if (_context.Images == null)

@@ -2,10 +2,10 @@
 
 namespace TaskManager.Models.AuthModel
 {
-    public class RegisterModel : IdentityUser
+    public class RegisterModel 
     {
-        public string Id {  get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
-
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHard { get; set; } = string.Empty;
     }
 }

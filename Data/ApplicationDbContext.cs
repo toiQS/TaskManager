@@ -37,61 +37,61 @@ namespace Data
         public DbSet<ProductWarehouse> ProductWarehouse { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Warehouse> Warehouse { get; set; }
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //{
-        //    base.OnModelCreating(builder);
-        //    builder.Entity<IdentityUserRole<string>>().HasKey(x => new { x.UserId, x.RoleId });
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<IdentityUserRole<string>>().HasKey(x => new { x.UserId, x.RoleId });
 
-        //    builder.Entity<IdentityRole>().HasData(
-        //   new IdentityRole
-        //   {
-        //       Id = "1",
-        //       Name = "Admin",
-        //       NormalizedName = "ADMIN"
-        //   },
-        //new IdentityRole
-        //{
-        //    Id = "2",
-        //    Name = "User",
-        //    NormalizedName = "USER"
-        //}
-        //    );
-        //    var hasher = new PasswordHasher<IdentityUser>();
-        //    builder.Entity<IdentityUser>().HasData(
-        //        new IdentityUser
-        //        {
-        //            Id = "1",
-        //            UserName = "admin",
-        //            NormalizedUserName = "ADMIN",
-        //            Email = "admin@example.com",
-        //            NormalizedEmail = "ADMIN@EXAMPLE.COM",
-        //            PasswordHash = hasher.HashPassword(null, "Admin@123")
-        //        },
-        //        new IdentityUser
-        //        {
-        //            Id = "2",
-        //            UserName = "user",
-        //            NormalizedUserName = "USER",
-        //            Email = "user@example.com",
-        //            NormalizedEmail = "USER@EXAMPLE.COM",
-        //            PasswordHash = hasher.HashPassword(null, "User@123")
-        //        }
-        //    );
+            builder.Entity<IdentityRole>().HasData(
+           new IdentityRole
+           {
+               Id = "1",
+               Name = "Admin",
+               NormalizedName = "ADMIN"
+           },
+        new IdentityRole
+        {
+            Id = "2",
+            Name = "User",
+            NormalizedName = "USER"
+        }
+            );
+            var hasher = new PasswordHasher<IdentityUser>();
+            builder.Entity<IdentityUser>().HasData(
+                new IdentityUser
+                {
+                    Id = "1",
+                    UserName = "admin",
+                    NormalizedUserName = "ADMIN",
+                    Email = "admin@example.com",
+                    NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                    PasswordHash = hasher.HashPassword(null, "Admin@123")
+                },
+                new IdentityUser
+                {
+                    Id = "2",
+                    UserName = "user",
+                    NormalizedUserName = "USER",
+                    Email = "user@example.com",
+                    NormalizedEmail = "USER@EXAMPLE.COM",
+                    PasswordHash = hasher.HashPassword(null, "User@123")
+                }
+            );
 
-        //    builder.Entity<IdentityUserRole<string>>().HasData(
+            builder.Entity<IdentityUserRole<string>>().HasData(
 
-        //        new IdentityUserRole<string>
-        //        {
-        //            UserId = "1",
-        //            RoleId = "1"
-        //        },
-        //        new IdentityUserRole<string>
-        //        {
-        //            UserId = "2",
-        //            RoleId = "2"
-        //        }
-        //    );
-        //}
+                new IdentityUserRole<string>
+                {
+                    UserId = "1",
+                    RoleId = "1"
+                },
+                new IdentityUserRole<string>
+                {
+                    UserId = "2",
+                    RoleId = "2"
+                }
+            );
+        }
     }
     
 }   

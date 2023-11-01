@@ -1,5 +1,6 @@
 using Data;
 using Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.ProductImportModel;
@@ -8,6 +9,7 @@ namespace TaskManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ProductImportController : ControllerBase
     {
         private readonly ILogger<ProductImportController> _logger;

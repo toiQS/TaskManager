@@ -1,5 +1,6 @@
 using Data;
 using ENTITY;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Models.CategoriesModel;
@@ -7,6 +8,7 @@ using TaskManager.Models.ProductModel;
 
 namespace TaskManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -19,6 +21,7 @@ namespace TaskManager.Controllers
             _logger = logger;
         }
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<ICollection<CategoriesIndexRequest>>> GetAllCategoryAsync()
         {
             if (_context.Categories == null)
@@ -34,6 +37,7 @@ namespace TaskManager.Controllers
             return Ok(result);
         }
         [HttpGet("{categoryId}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<CategoriesDetailRequest>> GetCategoryByIdAsync(string categoryId)
         {
             if (!string.IsNullOrEmpty(categoryId))
