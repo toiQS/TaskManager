@@ -9,7 +9,7 @@ về phần api:
 - tập trung vào việc trải nghiệm các câu lệnh và làm quen các cú pháp của lập trình api
 - sử dụng framework 7.0 và asp.net web api để xây dựng chương trình
 
-về xác thực và ủy quyền
+về xác thực và ủy quyền (vì là lập trình api nên không có view thể thử vả được chứa trong branches "try-work-with-identity-framework")
 - sử dụng identity framework để tạo hệ dữ liệu người dùng
 - tập trung vào việc trải nghiệm các câu lệnh và làm quen khi làm việc với identity framework
 - sử dụng thư viện authorzation để ủy quyền truy cập
