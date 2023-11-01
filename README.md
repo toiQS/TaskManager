@@ -9,3 +9,9 @@ về phần api:
 - tập trung vào việc trải nghiệm các câu lệnh và làm quen các cú pháp của lập trình api
 - sử dụng framework 7.0 và asp.net web api để xây dựng chương trình
 
+về xác thực và ủy quyền
+- sử dụng identity framework để tạo hệ dữ liệu người dùng
+- tập trung vào việc trải nghiệm các câu lệnh và làm quen khi làm việc với identity framework
+- sử dụng thư viện authorzation để ủy quyền truy cập
+  + khách hàng: có thể truy cập, xem và tìm kiếm trong thương hiệu, loại, sản phẩm và hình ảnh, riêng phần giỏ hàng và vật phẩm trong giỏ hàng người dùng sẽ được cấp toàn quyền truy cập
+  + quản lý : sẽ được cấp toàn quyền nhưng sẽ chỉ có thể truy cập vào giỏ hàng và vật phẩm trong giỏ hàng
